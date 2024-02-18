@@ -64,12 +64,12 @@ def main():
     reduce_dim = layer['reduce_dim']
     prec = PRECISION_T[layer['dtype']]
 
-    ifmap = np.array(bytes_to_float(elf.get_symbol_contents('ifmap'), prec), dtype=NUMPY_T[prec])
+    ifmap = bytes_to_float(elf.get_symbol_contents('ifmap'), prec)
     ifmap = ifmap.reshape(batch_size, seq_len, input_samples)
     ifmap = torch.from_numpy(ifmap)
 
     # Verify results
-    ofmap_actual = np.array(bytes_to_float(raw_results['ofmap'], prec), dtype=NUMPY_T[prec])
+    ofmap_actual = bytes_to_float(raw_results['ofmap'], prec)
     ofmap_golden = golden_model(ifmap, reduce_dim).detach().numpy().flatten()
 
     absolute_err = np.absolute(ofmap_golden - ofmap_actual)

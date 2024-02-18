@@ -27,6 +27,16 @@ def floating_point_torch_type(precision):
     return prec_to_torch_type_map[precision]
 
 
+def floating_point_numpy_type(precision: str) -> np.dtype:
+    prec_to_numpy_dtype_map = {
+        '64': np.float64,
+        '32': np.float32,
+        '16': np.float16,
+        '8': None
+    }
+    return prec_to_numpy_dtype_map[precision]
+
+
 # Returns the C type representing a floating-point value of the specified precision
 def floating_point_ctype(precision):
     prec_to_fp_type_map = {
@@ -128,27 +138,14 @@ def bytes_to_struct(byte_array, struct_map):
 
 
 # bytearray assumed little-endian
-def bytes_to_float(byte_array, prec='64'):
-    if prec == '64':
-        fmt_specifier = 'd'
-    elif prec == '32':
-        fmt_specifier = 'f'
-    else:
-        raise ValueError('Only single and double precision supported so far')
+def bytes_to_float(byte_array, prec='64') -> np.ndarray:
+    numpy_dtype = np.dtype(floating_point_numpy_type(prec)).newbyteorder('<')
 
-    size = struct.calcsize(fmt_specifier)  # Size of an element
-    num_elements = len(byte_array) // size
-
-    # Unpack the byte array into a list of elements
-    elements = []
-    for i in range(num_elements):
-        element_bytes = byte_array[i * size:(i + 1) * size]
-        element = struct.unpack(f'<{fmt_specifier}', element_bytes)[0]
-        elements.append(element)
-    if len(elements) == 1:
-        return elements[0]
+    numpy_array = np.frombuffer(byte_array, dtype=numpy_dtype)
+    if numpy_array.size == 1:
+        return numpy_array[0]
     else:
-        return elements
+        return numpy_array.copy()
 
 
 # bytearray assumed little-endian

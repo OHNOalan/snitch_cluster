@@ -1,0 +1,6 @@
+batchnorm_verify_results
+scaling_raw_results
+*.csv
+plots
+*.ipynb
+.ipynb_checkpoints

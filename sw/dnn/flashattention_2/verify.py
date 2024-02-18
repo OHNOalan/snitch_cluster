@@ -66,9 +66,9 @@ def main():
     B_c = layer['B_c']
     prec = PRECISION_T[layer['dtype']]
 
-    Q = np.array(bytes_to_float(elf.get_symbol_contents('Q'), prec), dtype=NUMPY_T[prec])
-    K = np.array(bytes_to_float(elf.get_symbol_contents('K'), prec), dtype=NUMPY_T[prec])
-    V = np.array(bytes_to_float(elf.get_symbol_contents('V'), prec), dtype=NUMPY_T[prec])
+    Q = bytes_to_float(elf.get_symbol_contents('Q'), prec)
+    K = bytes_to_float(elf.get_symbol_contents('K'), prec)
+    V = bytes_to_float(elf.get_symbol_contents('V'), prec)
     Q = torch.from_numpy(Q.reshape(N, d))
     V = torch.from_numpy(V.reshape(N, d))
     # Golden model expects key matrix in (N, d) form, while Snitch binary stores it in (d, N)
@@ -76,7 +76,7 @@ def main():
     K = torch.transpose(K, 0, 1)
 
     # Verify results
-    O_actual = np.array(bytes_to_float(raw_results['O'], prec), dtype=NUMPY_T[prec])
+    O_actual = bytes_to_float(raw_results['O'], prec)
     O_golden = exact_golden_model(Q, K, V, B_r, B_c).flatten()
     # O_golden = torch_golden_model(Q, K, V).detach().numpy().flatten()
 

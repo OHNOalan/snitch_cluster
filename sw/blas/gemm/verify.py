@@ -27,16 +27,16 @@ def main():
                                         symbols_bin=args.symbols_bin,
                                         log=args.log,
                                         output_uids=['c'])
-    c_actual = np.array(bytes_to_float(raw_results['c'], prec='64'))
+    c_actual = bytes_to_float(raw_results['c'], prec='64')
 
     # Extract input operands from ELF file
     if args.symbols_bin:
         elf = Elf(args.symbols_bin)
     else:
         elf = Elf(args.snitch_bin)
-    a = np.array(bytes_to_float(elf.get_symbol_contents('a'), prec='64'))
-    b = np.array(bytes_to_float(elf.get_symbol_contents('b'), prec='64'))
-    c = np.array(bytes_to_float(elf.get_symbol_contents('c'), prec='64'))
+    a = bytes_to_float(elf.get_symbol_contents('a'), prec='64')
+    b = bytes_to_float(elf.get_symbol_contents('b'), prec='64')
+    c = bytes_to_float(elf.get_symbol_contents('c'), prec='64')
     beta = bytes_to_int(elf.get_symbol_contents('BETA'), prec='32', signedness='unsigned')[0]
     m = bytes_to_int(elf.get_symbol_contents('M'), prec='32', signedness='unsigned')[0]
     n = bytes_to_int(elf.get_symbol_contents('N'), prec='32', signedness='unsigned')[0]

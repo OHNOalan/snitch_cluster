@@ -1,13 +1,14 @@
-// Copyright 2020 ETH Zurich and University of Bologna.
-// Solderpad Hardware License, Version 0.51, see LICENSE for details.
-// SPDX-License-Identifier: SHL-0.51
-
 {
-    input_dim: {
-        channels: 32
-        height: 8,
-        width: 8
-    }
-    tile_ci: 32
-    prec: 64
+  input_dim:
+  {
+    channels: 1
+    height: 8
+    width: 1
+  }
+  eps: 1e-05
+  tile_ci: 16
+  prec: 32
+  impl_opt_level: MULTICORE_OPT
+  is_forward: false
+  is_training: true
 }

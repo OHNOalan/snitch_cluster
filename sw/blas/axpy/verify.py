@@ -27,16 +27,16 @@ def main():
                                         symbols_bin=args.symbols_bin,
                                         log=args.log,
                                         output_uids=['z'])
-    z_actual = np.array(bytes_to_float(raw_results['z'], prec='64'))
+    z_actual = bytes_to_float(raw_results['z'], prec='64')
 
     # Extract input operands from ELF file
     if args.symbols_bin:
         elf = Elf(args.symbols_bin)
     else:
         elf = Elf(args.snitch_bin)
-    a = np.array(bytes_to_float(elf.get_symbol_contents('a'), prec='64'))
-    x = np.array(bytes_to_float(elf.get_symbol_contents('x'), prec='64'))
-    y = np.array(bytes_to_float(elf.get_symbol_contents('y'), prec='64'))
+    a = bytes_to_float(elf.get_symbol_contents('a'), prec='64')
+    x = bytes_to_float(elf.get_symbol_contents('x'), prec='64')
+    y = bytes_to_float(elf.get_symbol_contents('y'), prec='64')
 
     # Verify results
     z_golden = golden_model(a, x, y)
